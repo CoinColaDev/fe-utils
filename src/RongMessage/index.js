@@ -5,8 +5,9 @@
 
 import { EventEmitter } from 'fbemitter'
 
+export const emitter = new EventEmitter()
+
 const { RongIMClient, RongIMLib } = window
-const emitter = new EventEmitter()
 // 自动重连机制
 const reconnectConfig = {
   auto: true,
