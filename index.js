@@ -1,1 +1,7 @@
-throw new Error('Direct required usage not allowed')
+import logger from './logger'
+import RongMessage from './RongMessage'
+
+export default {
+  im: RongMessage,
+  logger
+}
