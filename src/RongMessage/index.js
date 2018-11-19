@@ -69,7 +69,7 @@ export const utils = {
 // senderUserId   发送方 Id。
 // sentTime   消息在融云服务端的发送时间。
 // objectName   消息标识，融云内置消息以 "RC:" 开头。融云内置消息类型表
-function normalizeMessage (message) {
+export function normalizeMessage (message) {
   /**
    * 系统消息 extra 包含字段：chat_id, sender_name, type, crypto_currency, stage
    * 私聊消息 extra 包含字段：chat_id, sender_name, type, crypto_currency
@@ -99,7 +99,7 @@ function normalizeMessage (message) {
  * 连接融云
  * http://www.rongcloud.cn/docs/web_api_demo.html#init
  */
-function connect (rongId, token) {
+export function connect (rongId, token) {
   RongIMClient.init(rongId)
   RongIMClient.connect(token, callbackConfig)
   RongIMLib.RongIMEmoji.init()
@@ -148,7 +148,7 @@ function connect (rongId, token) {
  * user: 当前用户信息 {userId, name, portraitUri}
  * conversationType: RongIMLib.ConversationType.PRIVATE / GROUP
  */
-function sendText ({receiver, content, extra, user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
+export function sendText ({receiver, content, extra, user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
   return new Promise((resolve, reject) => {
     const msg = new RongIMLib.TextMessage({content, extra: JSON.stringify(extra), user})
     RongIMClient.getInstance().sendMessage(conversationType, receiver, msg, {
@@ -171,7 +171,7 @@ function sendText ({receiver, content, extra, user}, conversationType = RongIMLi
  * user: 当前用户信息 {userId, name, portraitUri}
  * conversationType: RongIMLib.ConversationType.PRIVATE / GROUP
  */
-function sendImage ({receiver, content, extra, imageUri, user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
+export function sendImage ({receiver, content, extra, imageUri, user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
   return new Promise((resolve, reject) => {
     const message = new RongIMLib.ImageMessage({content, imageUri, extra: JSON.stringify(extra), user})
     RongIMClient.getInstance().sendMessage(conversationType, receiver, message, {
@@ -185,17 +185,14 @@ function sendImage ({receiver, content, extra, imageUri, user}, conversationType
   })
 }
 
-function reconnect () {
+export function reconnect () {
   RongIMClient.reconnect(callbackConfig, reconnectConfig)
 }
 
-export default {
-  connect,
-  reconnect,
-  sendText,
-  sendImage,
-  isConnected: () => RongIMClient.getInstance().getCurrentConnectionStatus() === RongIMLib.ConnectionStatus.CONNECTED,
-  currentStatus: () => RongIMClient.getInstance().getCurrentConnectionStatus(),
-  currentStatusText: () => RongIMLib.ConnectionStatus[RongIMClient.getInstance().getCurrentConnectionStatus()],
-  emitter
+export const isConnected = () => {
+  return RongIMClient.getInstance().getCurrentConnectionStatus() === RongIMLib.ConnectionStatus.CONNECTED
 }
+
+export const currentStatus = () => RongIMClient.getInstance().getCurrentConnectionStatus()
+
+export const currentStatusText = () => RongIMLib.ConnectionStatus[RongIMClient.getInstance().getCurrentConnectionStatus()]
