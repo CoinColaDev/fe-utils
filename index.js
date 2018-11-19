@@ -1,0 +1,1 @@
+throw new Error('Direct required usage not allowed')
