@@ -1,7 +1,3 @@
-import logger from './src/logger'
-import RongMessage from './src/RongMessage'
+export const im = require('./src/RongMessage')
 
-export default {
-  im: RongMessage,
-  logger
-}
+export const logger = require('./src/logger')
