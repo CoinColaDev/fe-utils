@@ -1,6 +1,6 @@
 {
   "name": "fe-utils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "front end utils for internal usage",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/CoinColaDev/fe-utils#readme",
   "dependencies": {
-    "fbemitter": "^2.1.1"
+    "fbemitter": "^2.1.1",
+    "superagent": "^4.0.0"
   }
 }
