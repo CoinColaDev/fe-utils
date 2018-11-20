@@ -57,10 +57,10 @@ const base = (method, dataMethod, contentType) => {
   }
 }
 
-export default {
-  post: base('post', 'send', 'form'),
-  get: base('get', 'query', 'json'),
-  setup: opts => {
-    Object.assign(settings, opts)
-  }
+export const post = base('post', 'send', 'form')
+
+export const get = base('get', 'query', 'json')
+
+export const setup = opts => {
+  Object.assign(settings, opts)
 }

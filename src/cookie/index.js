@@ -1,4 +1,4 @@
-const get = (key) => {
+export function get (key) => {
   let reg = new RegExp(key + '=([^;]*)')
   try {
     return document.cookie.match(reg)[1]
@@ -7,7 +7,7 @@ const get = (key) => {
   }
 }
 
-const set = (key, value, expires) => {
+export function set (key, value, expires) => {
   let exp = ''
   if (expires) {
     exp = new Date(new Date().getTime() + expires).toGMTString()
@@ -17,14 +17,8 @@ const set = (key, value, expires) => {
   document.cookie = key + '=' + value + ';path=/; expires=' + exp
 }
 
-const del = (key) => {
+export function del (key) => {
   let expires = new Date()
   expires.setTime(expires.getTime() - 1000)
   document.cookie = key + '=xxx;path=/;expires=' + expires.toGMTString()
-}
-
-export default {
-  get,
-  set,
-  del
 }
