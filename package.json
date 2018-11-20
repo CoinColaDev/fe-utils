@@ -2,7 +2,7 @@
   "name": "fe-utils",
   "version": "1.3.0",
   "description": "front end utils for internal usage",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib"
   },
