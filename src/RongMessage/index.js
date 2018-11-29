@@ -49,9 +49,12 @@ export const utils = {
     return msg.conversationType === RongIMLib.ConversationType.SYSTEM && SYSTEM_TIP_TYPE_LIST.indexOf(msg.content.extra.type) > -1
   },
   // 文本消息
-  isTextMessage: msg => msg.content.messageName === 'TextMessage',
+  isTextMessage: msg => msg.messageType === 'TextMessage',
   // 图片消息
-  isImageMessage: msg => msg.content.messageName === 'ImageMessage',
+  isImageMessage: msg => msg.messageType === 'ImageMessage',
+  // 文件消息
+  isFileMessage: msg => msg.messageType === 'FileMessage',
+  isVideoMessage: msg => msg.content.type === 'video',
   // 是否离线消息，表示在其它终端接收过
   isOfflineMessage: msg => !!msg.offLineMessage
 }
@@ -172,9 +175,23 @@ export function sendText ({receiver, content, extra, user}, conversationType = R
  * user: 当前用户信息 {userId, name, portraitUri}
  * conversationType: RongIMLib.ConversationType.PRIVATE / GROUP
  */
-export function sendImage ({receiver, content, extra, imageUri, user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
+export function sendImage ({receiver, content, imageUri, extra , user}, conversationType = RongIMLib.ConversationType.PRIVATE) {
   return new Promise((resolve, reject) => {
     const message = new RongIMLib.ImageMessage({content, imageUri, extra: JSON.stringify(extra), user})
+    RongIMClient.getInstance().sendMessage(conversationType, receiver, message, {
+      onSuccess: function (message) {
+        resolve(normalizeMessage(message))
+      },
+      onError: function (errorCode, message) {
+        reject(new Error(errorCode + message))
+      }
+    })
+  })
+}
+
+export function sendFile({ receiver, name, size, type, fileUrl, extra, user }, conversationType = RongIMLib.ConversationType.PRIVATE) {
+  return new Promise((resolve, reject) => {
+    const message = new RongIMLib.FileMessage({name, size, type, fileUrl, extra: JSON.stringify(extra), user})
     RongIMClient.getInstance().sendMessage(conversationType, receiver, message, {
       onSuccess: function (message) {
         resolve(normalizeMessage(message))
