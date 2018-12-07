@@ -1,3 +1,6 @@
+let __inited__ = false
+const jsbridge = {}
+
 const env = {
   isAndroid: function () {
     return /android/i.test(navigator.userAgent)
@@ -11,7 +14,7 @@ const env = {
 }
 
 function initModules (modules, NativeBridge, cc, signature) {
-  if (cc.__inited__) {
+  if (__inited__) {
     return
   }
 
@@ -69,7 +72,7 @@ function initModules (modules, NativeBridge, cc, signature) {
     cc[mod.name] = exposed
   })
 
-  cc.__inited__ = true
+  __inited__ = true
 }
 
 const modules = [
@@ -79,50 +82,53 @@ const modules = [
   {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog']}
 ]
 
+function onReady (fn) {
+  if (__inited__) {
+    fn()
+    return
+  }
+
+  // 只有在 app 中才会有
+  if (env.isInApp()) {
+    if (env.isAndroid()) {
+      w.onCcBridgeReady = function () {
+        initModules(modules, w.CcBridge, jsbridge)
+        fn(true)
+      }
+    } else if (env.isIOS()) {
+      let methodSignatureMap = {
+        showShareMenu: ['type', 'params', 'callback'],
+        getUserProfile: ['callback'],
+        isLoggedIn: ['callback'],
+        // GET 请求不支持传入data，填空对象。自行在url中拼接好
+        ajax: ['url', 'method', 'data', 'callback'],
+        checkAppInstalled: ['name', 'callback'],
+        launchExternalApp: ['name', 'callback'],
+        setClipboard: ['name', 'callback'],
+        getDeviceInfo: ['callback'],
+        getPlatform: ['callback'],
+        openAppPage: ['page', 'extra'],
+        openWebPage: ['url', 'target'],
+        // 不需要某个按钮则传空字符串
+        showTips: ['text', 'duration'],
+        showActionSheet: ['title', 'items', 'cancelText', 'callback'],
+        showDialog: ['title', 'content', 'okText', 'cancelText', 'callback']
+      }
+      setupWebViewJavascriptBridge(function () {
+        initModules(modules, w.WebViewJavascriptBridge, jsbridge, methodSignatureMap)
+        fn(true)
+      })
+    }
+  } else {
+    // 不在 app 中直接执行
+    __inited__ = true
+    fn(false)
+  }
+}
+
 export default {
   ...env,
-  onReady: function (fn) {
-    if (ccbridge.__inited__) {
-      fn()
-      return
-    }
-
-    // 只有在 cc app 中才会有 ccbridge
-    if (env.isInApp()) {
-      if (env.isAndroid()) {
-        w.onCcBridgeReady = function () {
-          initModules(modules, w.CcBridge, ccbridge)
-          fn(true)
-        }
-      } else if (env.isIOS()) {
-        let methodSignatureMap = {
-          showShareMenu: ['type', 'params', 'callback'],
-          getUserProfile: ['callback'],
-          isLoggedIn: ['callback'],
-          // GET 请求不支持传入data，填空对象。自行在url中拼接好
-          ajax: ['url', 'method', 'data', 'callback'],
-          checkAppInstalled: ['name', 'callback'],
-          launchExternalApp: ['name', 'callback'],
-          setClipboard: ['name', 'callback'],
-          getDeviceInfo: ['callback'],
-          getPlatform: ['callback'],
-          openAppPage: ['page', 'extra'],
-          openWebPage: ['url', 'target'],
-          // 不需要某个按钮则传空字符串
-          showTips: ['text', 'duration'],
-          showActionSheet: ['title', 'items', 'cancelText', 'callback'],
-          showDialog: ['title', 'content', 'okText', 'cancelText', 'callback']
-        }
-        setupWebViewJavascriptBridge(function () {
-          initModules(modules, w.WebViewJavascriptBridge, ccbridge, methodSignatureMap)
-          fn(true)
-        })
-      }
-    } else {
-      // 不在 cc app 中直接执行
-      ccbridge.__inited__ = true
-      fn(false)
-    }
-  }
+  ...jsbridge,
+  onReady
 }
 
