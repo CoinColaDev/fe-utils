@@ -91,8 +91,8 @@ function onReady (fn) {
   // 只有在 app 中才会有
   if (env.isInApp()) {
     if (env.isAndroid()) {
-      w.onCcBridgeReady = function () {
-        initModules(modules, w.CcBridge, jsbridge)
+      window.onCcBridgeReady = function () {
+        initModules(modules, window.CcBridge, jsbridge)
         fn(true)
       }
     } else if (env.isIOS()) {
@@ -115,7 +115,7 @@ function onReady (fn) {
         showDialog: ['title', 'content', 'okText', 'cancelText', 'callback']
       }
       setupWebViewJavascriptBridge(function () {
-        initModules(modules, w.WebViewJavascriptBridge, jsbridge, methodSignatureMap)
+        initModules(modules, window.WebViewJavascriptBridge, jsbridge, methodSignatureMap)
         fn(true)
       })
     }
