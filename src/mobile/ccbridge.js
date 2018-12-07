@@ -80,6 +80,7 @@ const modules = [
 ]
 
 export default {
+  ...env,
   onReady: function (fn) {
     if (ccbridge.__inited__) {
       fn()
