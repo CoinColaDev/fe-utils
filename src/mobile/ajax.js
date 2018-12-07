@@ -1,6 +1,6 @@
 import ccbridge from './ccbridge'
 
-const isInApp = ccbridge.isInApp()
+const isInApp = ccbridge.env.isInApp()
 let basePath = ''
 
 let globalAjaxHeaders = {
@@ -14,7 +14,8 @@ export function serialize (obj) {
 
 function nativeRequest ({url, params = {}, method = 'POST'}) {
   return new Promise((resolve, reject) => {
-    ccbridge.data.ajax(basePath + url, method, params, function (json) {
+    const jsbridge = ccbridge.jsbridge
+    jsbridge.data.ajax(basePath + url, method, params, function (json) {
       if (json && json.code === 0) {
         resolve(json)
       } else {

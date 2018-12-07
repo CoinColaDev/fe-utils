@@ -13,6 +13,16 @@ const env = {
   }
 }
 
+function setupWebViewJavascriptBridge (callback) {
+  if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback) }
+  window.WVJBCallbacks = [callback]
+  var WVJBIframe = d.createElement('iframe')
+  WVJBIframe.style.display = 'none'
+  WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__'
+  d.documentElement.appendChild(WVJBIframe)
+  setTimeout(function () { d.documentElement.removeChild(WVJBIframe) }, 0)
+}
+
 function initModules (modules, NativeBridge, cc, signature) {
   if (__inited__) {
     return
@@ -127,8 +137,10 @@ function onReady (fn) {
 }
 
 export default {
-  ...env,
-  ...jsbridge,
-  onReady
+  env,
+  onReady,
+  get jsbridge () {
+    return jsbridge
+  }
 }
 
