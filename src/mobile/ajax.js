@@ -2,11 +2,19 @@ import ccbridge from './ccbridge'
 
 const isInApp = ccbridge.env.isInApp()
 let basePath = ''
-
 let globalAjaxHeaders = {
-  'Content-Type': 'application/x-www-form-urlencoded'
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'X-Requested-With': 'XMLHttpRequest'
 }
 let globalAjaxParams = {}
+const mockState = {
+  get: {},
+  post: {}
+}
+
+function mock (url, method, res) {
+  mockState[method.toLowerCase()][url] = res
+}
 
 export function serialize (obj) {
   return Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&')
@@ -14,6 +22,12 @@ export function serialize (obj) {
 
 function nativeRequest ({url, params = {}, method = 'POST'}) {
   return new Promise((resolve, reject) => {
+    const mockData = mockState[method.toLocaleLowerCase()][url]
+    if (mockData) {
+      resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      return
+    }
+
     const jsbridge = ccbridge.jsbridge
     jsbridge.data.ajax(basePath + url, method, params, function (json) {
       if (json && json.code === 0) {
@@ -31,6 +45,12 @@ function webRequest ({url, params = {}, method = 'POST'}) {
   }
 
   return new Promise((resolve, reject) => {
+    const mockData = mockState[method.toLocaleLowerCase()][url]
+    if (mockData) {
+      resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      return
+    }
+
     const xhr = new XMLHttpRequest()
     xhr.open(method, basePath + url, true)
     Object.keys(globalAjaxHeaders).forEach(key => {
@@ -90,5 +110,7 @@ ajax.setup = function ({params = {}, headers = {}}) {
     ...headers
   }
 }
+
+ajax.mock = mock
 
 export default ajax

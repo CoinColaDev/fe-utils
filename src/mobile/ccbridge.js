@@ -89,7 +89,7 @@ const modules = [
   {name: 'app', methods: ['checkAppInstalled', 'launchExternalApp']},
   {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn']},
   {name: 'device', methods: ['getDeviceInfo', 'getPlatform']},
-  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog']}
+  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
 ]
 
 function onReady (fn) {
@@ -122,7 +122,8 @@ function onReady (fn) {
         // 不需要某个按钮则传空字符串
         showTips: ['text', 'duration'],
         showActionSheet: ['title', 'items', 'cancelText', 'callback'],
-        showDialog: ['title', 'content', 'okText', 'cancelText', 'callback']
+        showDialog: ['title', 'content', 'okText', 'cancelText', 'callback'],
+        setPageTitle: ['title']
       }
       setupWebViewJavascriptBridge(function () {
         initModules(modules, window.WebViewJavascriptBridge, jsbridge, methodSignatureMap)
