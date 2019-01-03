@@ -1,4 +1,32 @@
 let __inited__ = false
+
+export const SIG_MAP = {
+  showShareMenu: ['type', 'params', 'callback'],
+  getUserProfile: ['callback'],
+  isLoggedIn: ['callback'],
+  // GET 请求不支持传入data，填空对象。自行在url中拼接好
+  ajax: ['url', 'method', 'data', 'callback'],
+  checkAppInstalled: ['name', 'callback'],
+  launchExternalApp: ['name', 'callback'],
+  setClipboard: ['name', 'callback'],
+  getDeviceInfo: ['callback'],
+  getPlatform: ['callback'],
+  openAppPage: ['page', 'extra'],
+  openWebPage: ['url', 'target'],
+  // 不需要某个按钮则传空字符串
+  showTips: ['text', 'duration'],
+  showActionSheet: ['title', 'items', 'cancelText', 'callback'],
+  showDialog: ['title', 'content', 'okText', 'cancelText', 'callback'],
+  setPageTitle: ['title']
+}
+
+export const modules = [
+  {name: 'app', methods: ['checkAppInstalled', 'launchExternalApp']},
+  {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn']},
+  {name: 'device', methods: ['getDeviceInfo', 'getPlatform']},
+  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
+]
+
 const jsbridge = {}
 
 const env = {
@@ -23,7 +51,7 @@ function setupWebViewJavascriptBridge (callback) {
   setTimeout(function () { d.documentElement.removeChild(WVJBIframe) }, 0)
 }
 
-function initModules (modules, NativeBridge, cc, signature) {
+function initModules (NativeBridge, cc, signature) {
   if (__inited__) {
     return
   }
@@ -85,13 +113,6 @@ function initModules (modules, NativeBridge, cc, signature) {
   __inited__ = true
 }
 
-const modules = [
-  {name: 'app', methods: ['checkAppInstalled', 'launchExternalApp']},
-  {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn']},
-  {name: 'device', methods: ['getDeviceInfo', 'getPlatform']},
-  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
-]
-
 function onReady (fn) {
   if (__inited__) {
     fn()
@@ -102,31 +123,12 @@ function onReady (fn) {
   if (env.isInApp()) {
     if (env.isAndroid()) {
       window.onCcBridgeReady = function () {
-        initModules(modules, window.CcBridge, jsbridge)
+        initModules(window.CcBridge, jsbridge)
         fn(true)
       }
     } else if (env.isIOS()) {
-      let methodSignatureMap = {
-        showShareMenu: ['type', 'params', 'callback'],
-        getUserProfile: ['callback'],
-        isLoggedIn: ['callback'],
-        // GET 请求不支持传入data，填空对象。自行在url中拼接好
-        ajax: ['url', 'method', 'data', 'callback'],
-        checkAppInstalled: ['name', 'callback'],
-        launchExternalApp: ['name', 'callback'],
-        setClipboard: ['name', 'callback'],
-        getDeviceInfo: ['callback'],
-        getPlatform: ['callback'],
-        openAppPage: ['page', 'extra'],
-        openWebPage: ['url', 'target'],
-        // 不需要某个按钮则传空字符串
-        showTips: ['text', 'duration'],
-        showActionSheet: ['title', 'items', 'cancelText', 'callback'],
-        showDialog: ['title', 'content', 'okText', 'cancelText', 'callback'],
-        setPageTitle: ['title']
-      }
       setupWebViewJavascriptBridge(function () {
-        initModules(modules, window.WebViewJavascriptBridge, jsbridge, methodSignatureMap)
+        initModules(window.WebViewJavascriptBridge, jsbridge, SIG_MAP)
         fn(true)
       })
     }
