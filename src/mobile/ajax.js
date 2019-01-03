@@ -16,6 +16,8 @@ function mock (url, method, res) {
   mockState[method.toLowerCase()][url] = res
 }
 
+mock.delay = 500
+
 export function serialize (obj) {
   return Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&')
 }
@@ -24,7 +26,9 @@ function nativeRequest ({url, params = {}, method = 'POST'}) {
   return new Promise((resolve, reject) => {
     const mockData = mockState[method.toLocaleLowerCase()][url]
     if (mockData) {
-      resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      setTimeout(function () {
+        resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      }, mock.delay)
       return
     }
 
@@ -47,7 +51,9 @@ function webRequest ({url, params = {}, method = 'POST'}) {
   return new Promise((resolve, reject) => {
     const mockData = mockState[method.toLocaleLowerCase()][url]
     if (mockData) {
-      resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      setTimeout(function () {
+        resolve(typeof mockData === 'function' ? mockData(params) : mockData)
+      }, mock.delay)
       return
     }
 
