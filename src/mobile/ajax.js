@@ -37,7 +37,7 @@ function nativeRequest ({url, params = {}, method = 'POST'}) {
       if (json && json.code === 0) {
         resolve(json)
       } else {
-        reject(new Error(json ? json.message : 'Unknown Error'))
+        reject(new Error(json ? json.message : `${method} error for url ${basePath + url}`))
       }
     })
   })
