@@ -44,11 +44,11 @@ const env = {
 function setupWebViewJavascriptBridge (callback) {
   if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback) }
   window.WVJBCallbacks = [callback]
-  var WVJBIframe = d.createElement('iframe')
+  var WVJBIframe = document.createElement('iframe')
   WVJBIframe.style.display = 'none'
   WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__'
-  d.documentElement.appendChild(WVJBIframe)
-  setTimeout(function () { d.documentElement.removeChild(WVJBIframe) }, 0)
+  document.documentElement.appendChild(WVJBIframe)
+  setTimeout(function () { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
 
 function initModules (NativeBridge, cc, signature) {
