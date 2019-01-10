@@ -1,6 +1,10 @@
 import ccbridge from './ccbridge'
 
 const isInApp = ccbridge.env.isInApp()
+/**
+ * 生产环境的 basePath 请设置为 https://coincola-app.azureedge.net
+ * A 站的 basePath 为 https://app.alocnioc.com
+ */
 let basePath = ''
 let globalAjaxHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',

@@ -7,11 +7,10 @@ import ccbridge, { modules } from "./ccbridge"
 if (process.env.NODE_ENV === 'development') {
   const noop = (modName, methodName) => {
     console.log(
-      `**** Adpater for ccbrige.jsbridge.${modName}.${methodName} ****`
+      `[Adpater Init] ccbrige.jsbridge.${modName}.${methodName}`
     )
     return function() {
-      console.log(`**** ccbridge adapter method ****`)
-      console.log(modName, methodName, arguments)
+      console.log(`[Adpater Invoke] ccbridge.jsbridge.${modName}.${methodName}`, arguments)
     }
   }
   
