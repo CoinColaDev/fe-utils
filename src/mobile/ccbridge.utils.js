@@ -35,7 +35,7 @@ function nativeIsLoggedIn () {
 export const isLoggedIn = isInApp ? nativeIsLoggedIn : getUserProfile
 
 export const alert = isInApp ? (msg) => {
-  ccbridge.jsbridge.ui.showTips(String(msg))
+  ccbridge.jsbridge.ui.showTips(String(msg), 2000)
 } : window.alert
 
 // 跳转到登录页
