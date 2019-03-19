@@ -37,6 +37,11 @@ function nativeRequest ({url, params = {}, method = 'POST'}) {
     }
 
     const jsbridge = ccbridge.jsbridge
+    if (!jsbridge || !jsbridge.data || !jsbridge.data.ajax) {
+      reject(new Error(`No jsbridge found on url: ${window.location.href}`))
+      return
+    }
+
     jsbridge.data.ajax(basePath + url, method, params, function (json) {
       if (json && json.code === 0) {
         resolve(json)
