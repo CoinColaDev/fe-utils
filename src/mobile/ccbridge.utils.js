@@ -62,7 +62,6 @@ export function showShareMenu (type, params) {
     // Android: desc, iOS: description, standard: description
     if (isAndroid) {
       params.desc = params.description
-      delete params.description
     }
   }
 
