@@ -104,17 +104,6 @@ export function normalizeMessage (message) {
  * http://www.rongcloud.cn/docs/web_api_demo.html#init
  */
 export function connect (rongId, token) {
-  RongIMClient.init(rongId)
-  RongIMClient.connect(token, callbackConfig)
-  RongIMLib.RongIMEmoji.init()
-
-  // 对方推送的消息在这里接受
-  RongIMClient.setOnReceiveMessageListener({
-    onReceived: message => {
-      emitter.emit('message', normalizeMessage(message))
-    }
-  })
-
   RongIMClient.setConnectionStatusListener({
     // 0: "CONNECTED"
     // 1: "CONNECTING"
@@ -127,21 +116,15 @@ export function connect (rongId, token) {
       emitter.emit('statusChanged', status)
     }
   })
-
-
-  /**
-   * 多标签页抢占消息推送
-   */
-  // document.addEventListener('visibilitychange', function () {
-  //   const instance = RongIMClient.getInstance()
-  //   if (document.visibilityState === 'visible') {
-  //     if (instance.getCurrentConnectionStatus() > RongIMLib.ConnectionStatus.CONNECTING) {
-  //       reconnect()
-  //     }
-  //   } else {
-  //     instance.disconnect()
-  //   }
-  // })
+  // 对方推送的消息在这里接受
+  RongIMClient.setOnReceiveMessageListener({
+    onReceived: message => {
+      emitter.emit('message', normalizeMessage(message))
+    }
+  })
+  RongIMClient.init(rongId)
+  RongIMClient.connect(token, callbackConfig)
+  RongIMLib.RongIMEmoji.init()
 }
 
 /**

@@ -12,7 +12,7 @@ const settings = {
   success: noop
 }
 
-const base = (method, dataMethod, contentType) => {
+export const ajax = (method, dataMethod, contentType) => {
   return (url, params = {}, headers = {}) => {
     return new Promise((resolve, reject) => {
       url = settings.url ? settings.url(url) : url
@@ -57,9 +57,11 @@ const base = (method, dataMethod, contentType) => {
   }
 }
 
-export const post = base('post', 'send', 'form')
+export const post = ajax('post', 'send', 'form')
 
-export const get = base('get', 'query', 'json')
+export const get = ajax('get', 'query', 'json')
+
+export const postJson = ajax('post', 'send', 'application/json')
 
 export const setup = opts => {
   Object.assign(settings, opts)
