@@ -71,7 +71,8 @@ export function showShareMenu (type, params) {
     window.WebViewJavascriptBridge.callHandler && window.WebViewJavascriptBridge.callHandler('showShareMenu', {
       type,
       params,
-      eventName: params.eventName
+      eventName: params.eventName,
+      campaign: params.campaign
     })
   }
 }
