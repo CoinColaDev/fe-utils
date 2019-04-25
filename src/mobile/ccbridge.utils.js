@@ -68,7 +68,7 @@ export function showShareMenu (type, params) {
     ccbridge.jsbridge.ui.showShareMenu(type, params)
   } else {
     // ios eventName 层级错乱
-    NativeBridge.callHandler && NativeBridge.callHandler('showShareMenu', {
+    window.WebViewJavascriptBridge.callHandler && window.WebViewJavascriptBridge.callHandler('showShareMenu', {
       type,
       params,
       eventName: params.eventName
