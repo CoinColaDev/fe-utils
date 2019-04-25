@@ -57,7 +57,6 @@ export function showShareMenu (type, params) {
   if (type === 2) {
     params.name = params.eventName
     // iOS 3.6.6 以下不支持分享图片（具体版本未知，暂定）
-    delete params.eventName
   } else if (type === 3) {
     // Android: desc, iOS: description, standard: description
     if (isAndroid) {
@@ -65,5 +64,14 @@ export function showShareMenu (type, params) {
     }
   }
 
-  ccbridge.jsbridge.ui.showShareMenu(type, params)
+  if (isAndroid) {
+    ccbridge.jsbridge.ui.showShareMenu(type, params)
+  } else {
+    // ios eventName 层级错乱
+    NativeBridge.callHandler && NativeBridge.callHandler('showShareMenu', {
+      type,
+      params,
+      eventName: params.eventName
+    })
+  }
 }
