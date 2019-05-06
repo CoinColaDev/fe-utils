@@ -31,6 +31,16 @@ export const ajax = (method, dataMethod, contentType) => {
           if (err) {
             log(err)
             // request aborted or server is down
+
+            if(settings.error) {
+              settings.error({
+                response: res,
+                url: url,
+                params: params,
+                headers: headers
+              })
+            }
+
             if (err.crossDomain) {
               return
             }
