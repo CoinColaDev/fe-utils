@@ -55,6 +55,7 @@ export const utils = {
   // 文件消息
   isFileMessage: msg => msg.messageType === 'FileMessage',
   isVideoMessage: msg => msg.content.type === 'video',
+  isCommandMessage: msg => msg.messageType === 'CommandMessage',
   // 是否离线消息，表示在其它终端接收过
   isOfflineMessage: msg => !!msg.offLineMessage
 }
@@ -85,11 +86,9 @@ export function normalizeMessage (message) {
     message.content.extra = extra
   }
 
-  if (!extra.chat_id) {
-    throw new Error('Missing chat id in extra')
+  if (extra && extra.chat_id) {
+    message.chatId = extra.chat_id
   }
-
-  message.chatId = extra.chat_id
 
   // emoji 表情转换
   if (utils.isTextMessage(message)) {
