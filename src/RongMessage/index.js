@@ -27,6 +27,14 @@ const callbackConfig = {
   }
 }
 
+function clearRongMessageCache () {
+  for (let key in localStorage) {
+    if (key.indexOf('rong_') > -1) {
+      localStorage.removeItem(key)
+    }
+  }
+}
+
 export const SYSTEM_TIP_TYPE_LIST =  ['MILD', 'MODERATE', 'SEVERE']
 
 export const CUSTOMER_SERVICE_TYPE = 'CUSTOMER_SERVICE'
@@ -102,7 +110,12 @@ export function normalizeMessage (message) {
  * 连接融云
  * http://www.rongcloud.cn/docs/web_api_demo.html#init
  */
-export function connect (rongId, token) {
+export function connect (rongId, token, clearCache) {
+  // 清除融云缓存信息，避免始终连不上
+  if (clearCache) {
+    clearRongMessageCache()
+  }
+
   RongIMClient.setConnectionStatusListener({
     // 0: "CONNECTED"
     // 1: "CONNECTING"
