@@ -5,12 +5,14 @@ const isInApp = ccbridge.env.isInApp()
  * 生产环境的 basePath 请设置为 https://coincola-app.azureedge.net
  * A 站的 basePath 为 https://app.alocnioc.com
  */
+const noop = function () {}
 let basePath = ''
 let globalAjaxHeaders = {
   'Content-Type': 'application/x-www-form-urlencoded',
   'X-Requested-With': 'XMLHttpRequest'
 }
 let globalAjaxParams = {}
+let globalBeforeSend = noop
 const mockState = {
   get: {},
   post: {}
@@ -62,6 +64,7 @@ function webRequest ({url, params = {}, method = 'POST'}) {
   }
 
   return new Promise((resolve, reject) => {
+    globalBeforeSend && globalBeforeSend()
     const mockData = mockState[method.toLocaleLowerCase()][url]
     if (mockData) {
       setTimeout(function () {
@@ -119,7 +122,7 @@ ajax.post = function (url, params) {
   })
 }
 
-ajax.setup = function ({params = {}, headers = {}}) {
+ajax.setup = function ({params = {}, headers = {}, beforeSend}) {
   globalAjaxParams = {
     ...globalAjaxParams,
     ...params
@@ -128,6 +131,7 @@ ajax.setup = function ({params = {}, headers = {}}) {
     ...globalAjaxHeaders,
     ...headers
   }
+  beforeSend && (globalBeforeSend = beforeSend)
 }
 
 ajax.mock = mock
