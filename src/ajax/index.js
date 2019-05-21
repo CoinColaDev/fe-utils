@@ -32,7 +32,7 @@ export const ajax = (method, dataMethod, contentType) => {
             log(err)
             // request aborted or server is down
 
-            if(settings.error) {
+            if (settings.error) {
               settings.error({
                 response: res,
                 url: url,
@@ -45,7 +45,7 @@ export const ajax = (method, dataMethod, contentType) => {
               return
             }
 
-            return reject(err)
+            return reject(res && res.body && res.body.message ? new Error(res.body.message) : err)
           }
 
           // backend down
