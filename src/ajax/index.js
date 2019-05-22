@@ -45,7 +45,14 @@ export const ajax = (method, dataMethod, contentType) => {
               return
             }
 
-            return reject(res && res.body && res.body.message ? new Error(res.body.message) : err)
+            var error = err
+            if(res && res.body && res.body.message){
+              // 需要带上response
+              error =  new Error(res.body.message)
+              error.response = res
+            }
+  
+            return reject(error)
           }
 
           // backend down
