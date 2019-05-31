@@ -88,6 +88,10 @@ export function normalizeMessage (message) {
    * 私聊消息 extra 包含字段：chat_id, sender_name, type, crypto_currency
    * 群组消息 extra 包含字段：chat_id, sender_name, type, crypto_currency
    */
+  if (typeof message.content === 'string') {
+    message.content = JSON.parse(message.content)
+  }
+  
   let { extra, content } = message.content
   if (typeof extra === 'string') {
     extra = JSON.parse(extra)
