@@ -1,6 +1,7 @@
 let __inited__ = false
 
 export const SIG_MAP = {
+  setShareMenuInfo: [],
   showShareMenu: ['type', 'params', 'callback'],
   getUserProfile: ['callback'],
   isLoggedIn: ['callback'],
@@ -24,7 +25,7 @@ export const modules = [
   {name: 'app', methods: ['checkAppInstalled', 'launchExternalApp']},
   {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn']},
   {name: 'device', methods: ['getDeviceInfo', 'getPlatform']},
-  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
+  {name: 'ui', methods: ['openWebPage', 'openAppPage', 'setShareMenuInfo', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
 ]
 
 const jsbridge = {}
@@ -83,7 +84,8 @@ function initModules (NativeBridge, cc, signature) {
           let params = {}
           let sigs = signature[method]
           let callback
-          if (sigs) {
+          // 组织参数对象
+          if (sigs && sigs.length) {
             for (let i = 0; i < sigs.length; i += 1) {
               let key = sigs[i]
               if (key !== 'callback') {
@@ -92,6 +94,9 @@ function initModules (NativeBridge, cc, signature) {
                 callback = arguments[i]
               }
             }
+          } else {
+            // 本身就是对象，不需要再组
+            params = arguments[0]
           }
           return NativeBridge.callHandler(method, params, callback)
         } else if (NativeBridge[mod.name]) {
