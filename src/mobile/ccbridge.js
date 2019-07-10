@@ -1,7 +1,7 @@
 let __inited__ = false
 
 export const SIG_MAP = {
-  setShareMenuInfo: [],
+  setShareMenuInfo: ['type', 'compaign', 'params'],
   showShareMenu: ['type', 'params', 'callback'],
   getUserProfile: ['callback'],
   isLoggedIn: ['callback'],
@@ -31,8 +31,11 @@ export const modules = [
 const jsbridge = {}
 
 const env = {
+  /**
+   * 非 ios 都当做安卓
+   */
   isAndroid: function () {
-    return /android/i.test(navigator.userAgent)
+    return /iPhone|iPad/i.test(navigator.userAgent) === false
   },
   isIOS: function () {
     return /iPhone|iPad/i.test(navigator.userAgent)
@@ -94,9 +97,6 @@ function initModules (NativeBridge, cc, signature) {
                 callback = arguments[i]
               }
             }
-          } else {
-            // 本身就是对象，不需要再组
-            params = arguments[0]
           }
           return NativeBridge.callHandler(method, params, callback)
         } else if (NativeBridge[mod.name]) {

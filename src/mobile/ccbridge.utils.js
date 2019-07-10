@@ -76,3 +76,12 @@ export function showShareMenu (type, params) {
     })
   }
 }
+
+export function setShareMenuInfo (params) {
+  if (!isAndroid) {
+    ccbridge.jsbridge.ui.setShareMenuInfo(3, params.compaign, params)
+    return
+  }
+
+  ccbridge.jsbridge.ui.setShareMenuInfo(params)
+}
