@@ -84,7 +84,11 @@ function webRequest ({url, params = {}, method = 'POST'}) {
         if (json && json.code === 0) {
           resolve(json)
         } else {
-          reject(new Error(json.message))
+          const error = new Error(json.message)
+          if (json.code) {
+            error.code = json.code
+          }
+          reject(error)
         }
       } catch (e) {
         reject(e)
