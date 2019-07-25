@@ -1,7 +1,7 @@
 let __inited__ = false
 
 export const SIG_MAP = {
-  setShareMenuInfo: ['type', 'compaign', 'params'],
+  setShareMenuInfo: ['type', 'campaign', 'params'],
   showShareMenu: ['type', 'params', 'callback'],
   getUserProfile: ['callback'],
   isLoggedIn: ['callback'],
