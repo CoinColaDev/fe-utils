@@ -77,11 +77,16 @@ export function showShareMenu (type, params) {
   }
 }
 
+/**
+ * 3.15 开始支持
+ */
 export function setShareMenuInfo (params) {
-  if (!isAndroid) {
-    ccbridge.jsbridge.ui.setShareMenuInfo(3, params.campaign, params)
-    return
+  if (ccbridge.version.compare('3.15.0') >= 0) {
+    if (!isAndroid) {
+      ccbridge.jsbridge.ui.setShareMenuInfo(3, params.campaign, params)
+      return
+    }
+  
+    ccbridge.jsbridge.ui.setShareMenuInfo(params)
   }
-
-  ccbridge.jsbridge.ui.setShareMenuInfo(params)
 }

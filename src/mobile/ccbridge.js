@@ -144,11 +144,33 @@ function onReady (fn) {
   }
 }
 
+let matches = navigator.userAgent.match(/CoinCola\/(\d+\.\d+\.\d+)/i)
+let versionText = matches ? matches[1] : ''
+let versionNumber = getVersionNumber(versionText)
+
+function getVersionNumber (text) {
+  if (!text) {
+    return 0
+  }
+
+  const parts = text.split('.')
+  return (parts[0] || 0) * 10000 + (parts[1] || 0) * 100 + (parts[2] || 0) * 1
+}
+
+const version = {
+  text: versionText,
+  number: versionNumber,
+  compare: function (vText) {
+    return versionNumber - getVersionNumber(vText)
+  }
+}
+
 export default {
   env,
   onReady,
   get jsbridge () {
     return jsbridge
-  }
+  },
+  version
 }
 
