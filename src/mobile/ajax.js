@@ -46,7 +46,7 @@ function nativeRequest ({url, params = {}, method = 'POST'}) {
 
     jsbridge.data.ajax(basePath + url, method, params, function (json = {}) {
       if (json && json.code === 0) {
-        resolve(json)
+        resolve({data: json})
       } else {
         const error = new Error(json.message || `${method} error for url ${basePath + url}`)
         if (json.code) {
