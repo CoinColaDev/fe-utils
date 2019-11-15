@@ -120,17 +120,26 @@ function initModules (NativeBridge, cc, signature) {
 
 function onReady (fn) {
   if (__inited__) {
-    fn()
+    fn(false)
     return
   }
 
   // 只有在 app 中才会有
   if (env.isInApp()) {
     if (env.isAndroid()) {
-      window.onCcBridgeReady = function () {
+      const ready = function () {
         initModules(window.CcBridge, jsbridge)
         fn(true)
       }
+      /**
+       * 有可能已经注入成功了
+       */
+      if (window.CcBridge) {
+        ready()
+        return
+      }
+
+      window.onCcBridgeReady = ready
     } else if (env.isIOS()) {
       setupWebViewJavascriptBridge(function () {
         initModules(window.WebViewJavascriptBridge, jsbridge, SIG_MAP)
