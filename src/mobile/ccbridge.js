@@ -18,12 +18,13 @@ export const SIG_MAP = {
   showTips: ['text', 'duration'],
   showActionSheet: ['title', 'items', 'cancelText', 'callback'],
   showDialog: ['title', 'content', 'okText', 'cancelText', 'callback'],
-  setPageTitle: ['title']
+  setPageTitle: ['title'],
+  setAuthResult: ['result']
 }
 
 export const modules = [
   {name: 'app', methods: ['checkAppInstalled', 'launchExternalApp']},
-  {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn']},
+  {name: 'data', methods: ['setClipboard', 'saveImage', 'ajax', 'getUserProfile', 'isLoggedIn','setAuthResult']},
   {name: 'device', methods: ['getDeviceInfo', 'getPlatform']},
   {name: 'ui', methods: ['openWebPage', 'openAppPage', 'setShareMenuInfo', 'showShareMenu', 'showTips', 'showActionSheet', 'showDialog', 'setPageTitle']}
 ]
