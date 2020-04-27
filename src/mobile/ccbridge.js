@@ -42,7 +42,7 @@ const env = {
     return /iPhone|iPad/i.test(navigator.userAgent)
   },
   isInApp: function () {
-    return /CoinCola/i.test(navigator.userAgent)
+    return /CoinCola/i.test(navigator.userAgent) || window.location.protocol === 'file:'
   }
 }
 
