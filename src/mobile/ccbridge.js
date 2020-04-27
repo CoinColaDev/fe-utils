@@ -42,6 +42,9 @@ const env = {
     return /iPhone|iPad/i.test(navigator.userAgent)
   },
   isInApp: function () {
+    // ios本地打包的页面和url直接打开的页面携带的ua不同，android全部相同
+    // ios本地打包的页面不携带Coincola字段，状态：未修正，当前版本4.4.2
+    // 此版本前未出现问题是因为上报脚本修改了ua,而上报脚本携带了coincola字段，修改了上报地址后ua中不存在coincola字段，因此报错
     return /CoinCola/i.test(navigator.userAgent) || window.location.protocol === 'file:'
   }
 }
